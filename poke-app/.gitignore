@@ -1,4 +1,3 @@
-node_modules/
 .expo/
 dist/
 npm-debug.*
@@ -9,6 +8,20 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
+
+# Android/IntelliJ
+#
+build/
+.idea
+.gradle
+local.properties
+*.iml
+
+# node.js
+#
+node_modules/
+npm-debug.log
+yarn-error.log
 
 # macOS
 .DS_Store
