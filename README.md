@@ -4,8 +4,8 @@
 ## Project overview
 
 ## Technologies Used
-- Language: React
-- Tools: Git
+- Language/Library/Framework: JavaScript, React Native
+- Tools: Git, Android Studio Emulator
 
 ## Features
 - User account creation
