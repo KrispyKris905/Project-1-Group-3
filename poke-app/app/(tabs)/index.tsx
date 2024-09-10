@@ -7,35 +7,39 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
 export default function HomeScreen() {
+  const navigation = useNavigation();
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={<Image source={require('@/assets/images/Poke-App_Logo.png')}style={styles.headerImage}/>}>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-      </ThemedView>
+    <View style={styles.container}>
+      <Image source={require('@/assets/images/Poke-App_Logo.png')}style={styles.headerImage} resizeMode="contain"/>
       <ThemedView style={styles.buttonContainer}>
         <Button
-          title="Sign up"
-        //   onPress={() => navigation.navigate('SignUp')}
+          title="Sign up" 
+          onPress={() => navigation.navigate('SignUp' as never)}
         />
       </ThemedView>
       <ThemedView style={styles.buttonContainer}>
         <Button
           title="Log in"
-        //   onPress={() => navigation.navigate('Login')}
+          onPress={() => navigation.navigate('Login' as never)}
         />
       </ThemedView>
-    </ParallaxScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container:{
+    flex:1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   headerImage: {
     color: '#808080',
-    bottom: -90,
-    left: -35,
+    top: 0,
     position: 'absolute',
+    alignContent: 'center',
+    width: 400,
+    height: 400,
   },
   titleContainer: {
     flexDirection: 'row',
