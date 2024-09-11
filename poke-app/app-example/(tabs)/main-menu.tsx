@@ -18,6 +18,13 @@ export default function MenuScreen() {
 
       <View style={styles.buttonContainer}>
         <Button
+          title="Team Manager"
+        //   onPress={() => navigation.navigate('TeamManager')}
+        />
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <Button
           title="Profile"
         //   onPress={() => navigation.navigate('Profile')}
         />
