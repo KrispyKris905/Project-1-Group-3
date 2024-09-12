@@ -32,8 +32,8 @@ export default function MenuScreen() {
 
       <View style={styles.buttonContainer}>
         <Button
-          title="Settings"
-        //   onPress={() => navigation.navigate('Settings')}
+          title="Sign out"
+          onPress={() => navigation.navigate('index' as never)}
         />
       </View>
 

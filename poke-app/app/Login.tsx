@@ -4,20 +4,15 @@ import { useNavigation } from '@react-navigation/native';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-export default function HomeScreen() {
+export default function LoginScreen() {
+  const navigation = useNavigation();
     return (
-        <ThemedView style={styles.titleContainer}>
-          <ThemedText type="title">Welcome!</ThemedText>
-          <View style={styles.buttonContainer}>
-          <Button
-            title="Sign up"
-          //   onPress={() => navigation.navigate('SignUp')}
-          />
-        </View>
+      <ThemedView style={styles.titleContainer}>
+        <ThemedText type="title">Welcome!</ThemedText>
         <View style={styles.buttonContainer}>
           <Button
-            title="Log in"
-          //   onPress={() => navigation.navigate('Login')}
+            title="Login"
+            onPress={() => navigation.navigate('(tabs)' as never)}
           />
         </View>
       </ThemedView>
