@@ -15,7 +15,7 @@ export default function Index() {
         "CREATE TABLE IF NOT EXISTS pokemon (id INTEGER PRIMARY KEY NOT NULL, name TEXT, type TEXT);"
       );
       tx.executeSql(
-        "CREATE TABLE IF NOT EXISTS teams (id INTEGER PRIMARY KEY NOT NULL, name TEXT);"
+        "CREATE TABLE IF NOT EXISTS teams (id INTEGER PRIMARY KEY NOT NULL, name TEXT, userid INTEGER, FOREIGN KEY(user_id) REFERENCES users(id));"
       );
       tx.executeSql(
         "CREATE TABLE IF NOT EXISTS team_pokemon (team_id INTEGER, pokemon_id INTEGER, FOREIGN KEY(team_id) REFERENCES teams(id), FOREIGN KEY(pokemon_id) REFERENCES pokemon(id));"
