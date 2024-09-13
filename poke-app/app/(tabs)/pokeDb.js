@@ -68,14 +68,30 @@ export const fetchPokemon = async () => {
 };
 
 // Create a new team
-export const createTeam = (teamName) => {
+export const createTeam = (teamName, userId) => {
   db.transaction((tx) => {
     tx.executeSql(
-      "INSERT INTO teams (name) VALUES (?);",
-      [teamName],
+      "INSERT INTO teams (name, user_id) VALUES (?,?);",
+      [teamName, userId],
       (_, result) => console.log("Team created successfully!", result),
       (_, error) => {
         console.error("Failed to create team", error);
+        return false;
+      }
+    );
+  });
+};
+
+const getTeamsByUser = (userId) => {
+  db.transaction((tx) => {
+    tx.executeSql(
+      "SELECT * FORM teams WHERE  user_id = ?",
+      [userId],
+      (_,{rows }) => {
+        console.log("teams created: ", rows._array);
+      },
+      (_,error) => {
+        console.log("failed to fetch teams ", error);
         return false;
       }
     );
