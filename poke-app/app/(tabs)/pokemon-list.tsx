@@ -1,71 +1,68 @@
-import React, {useEffect} from 'react';
-import { Text, View, StyleSheet, SafeAreaView, FlatList, Button } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { Text, Image, View, StyleSheet, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import {fetchPokemonList} from './pokeDb';
 
-
-const DATA = [
-    {
-        id: '35',
-        title:"clefairy",
-    },
-    {
-        id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-        title: 'Second Item',
-    },
-    {
-        id: '58694a0f-3da1-471f-bd96-145571e29d72',
-        title: 'Third Item',
-    },
-  ];
-
-  type ItemProps = {title: string};
-
-  const Item = ({title}: ItemProps) => (
-    <View style={styles.item}>
-      <Text style={styles.title}>{title}</Text>
-    </View>
-  );
-
+interface Pokemon {
+    name: string;
+    image: string;
+  }
 export default function ListScreen() {
   const navigation = useNavigation();
+  const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
   useEffect(() => {
-    // Initialize the database when the component is mounted
-    
+    const getPokemonData = async () => {
+      const data = await fetchPokemonList();
+      setPokemonList(data);
+    };
+
+    getPokemonData();
   }, []);
-    
+     // Render each item in the list
+     const renderItem = ({ item }: { item: Pokemon }) => (
+        <View style={styles.itemContainer}>
+            <Image style={styles.tinyLogo} source={{uri: item.image}}/>
+            <Text style={styles.itemText}>{item.name}</Text>
+        </View>
+      );
+
   return (
-    <SafeAreaView style={styles.container}>
-        {/* <Button title="Fetch Pokemon" onPress={fetchPokemon} /> */}
+    <View style={styles.container}>
+      <Text style={styles.title}>Pokémon List</Text>
       <FlatList
-        data={DATA}
-        renderItem={({item}) => <Item title={item.title} />}
-        keyExtractor={item => item.id}
+        data={pokemonList}
+        keyExtractor={(item) => item.name}
+        renderItem={renderItem}
+        // onEndReached={fetchMorePokemon}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
+
 const styles = StyleSheet.create({
-  container: {
-    // flex: 1,
-    padding: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  buttonContainer: {
-    marginVertical: 10,
-    width: '80%',
-    backgroundColor: "#FFC0CB",
-  }
-});
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
+    },
+    title: {
+      fontSize: 24,
+      marginBottom: 20,
+    },
+    itemContainer: {
+      padding: 10,
+      backgroundColor: 'lightgray',
+      elevation: 4,
+      margin: 5,
+      borderRadius: 15,
+    },
+    itemText: {
+      fontSize: 18,
+    },
+    tinyLogo: {
+        width: 50,
+        height: 50,
+      },
+  });
