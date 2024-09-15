@@ -11,7 +11,8 @@ Android application using a Pokémon API that offers users a wide range of funct
 
 ## Features
 - User account creation
-- List of pokemon
+- View a list of pokemon
+- Pokemon team creation
 
 ## Contact
 - Ashley Joy Jaramillo | [xeahh](https://github.com/xeahh)
