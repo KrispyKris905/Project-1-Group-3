@@ -35,7 +35,28 @@ export default function Index() {
           );
       });
   };
-  
+
+  const validateLogin = (username, password, callback) => {
+    db.transaction((tx) => {
+      tx.executeSql(
+        "SELECT * FROM user WHERE username = ? AND password = ?;",
+        [username, password],
+        (_, { rows }) => {
+          if (rows.length > 0) {
+            // Username and password match
+            callback(true); // Login successful
+          } else {
+            callback(false); // Invalid username or password
+          }
+        },
+        (_, error) => {
+          console.error("Failed to query user for login", error);
+          return false;
+        }
+      );
+    });
+  };
+
     // Function to create a new user
     const createUser = (username, password) => {
       checkUsernameExists(username, (exists) => {
