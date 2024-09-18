@@ -1,24 +1,113 @@
-import { Image,View, Button, StyleSheet, Platform } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-
-import ParallaxScrollView from '@/components/ParallaxScrollView';
+import { Image,View, Button, StyleSheet, TextInput } from 'react-native';
+import { useState} from 'react';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import * as SQLite from "expo-sqlite";
+
+// async function resetDatabase() {
+//   const db = SQLite.openDatabaseSync("users.db");
+//   const existing = await db.getAllAsync('SELECT * FROM users');
+//   if (existing.length > 0) {
+//     console.log("existing length>0")
+//     db.closeAsync();
+//     SQLite.deleteDatabaseSync("users.db");
+//   }
+// }
+
+async function openDatabase() {
+
+  const db = await SQLite.openDatabaseAsync("users.db");
+  await db.execAsync(`
+    PRAGMA journal_mode = WAL;
+    CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY NOT NULL, 
+    username TEXT NOT NULL, 
+    password TEXT NOT NULL);
+    `);
+
+    // Check if the user table empty
+  const existingRows = await db.getAllAsync('SELECT * FROM users');
+
+  // If no rows exist, insert user test data
+  if (existingRows.length === 0) {
+    await db.execAsync(`
+      INSERT INTO users (username, password) VALUES ('test1', '123');
+      INSERT INTO users (username, password) VALUES ('test2', '456');
+    `);
+  }
+
+  // const allRow = await db.getAllAsync('SELECT * FROM users');
+  // console.log("test user db: ")
+  // console.log(allRow);
+}
+
+// list all users on console
+async function listUsers() {
+  const db = SQLite.openDatabaseSync("users.db");
+  const allUsers = db.getAllSync('SELECT * FROM users');
+  console.log("listUsers:")
+  console.log(allUsers);
+}
+
+export async function compareUsernames(username: string): Promise<boolean> {
+  
+  const db = SQLite.openDatabaseSync("users.db");
+
+    // Query to check if the usernames match
+    const result = await db.getAllAsync(
+      'SELECT * FROM users WHERE username = ?', [username]);
+      
+    if (result.length > 0) {
+      return false; //username exists
+    } 
+    return true; //username does not exist
+}
+
+async function createUser(username: string, password: string) {
+  const db = SQLite.openDatabaseSync("users.db");
+  if (await compareUsernames(username) == true) { // user doesnt exist
+    await db.execAsync(`
+      INSERT INTO users (username, password) VALUES ('${username}', '${password}');`
+    );
+    console.log("user created");
+    listUsers();
+  } else { // user exists
+    alert("Username taken");
+    console.log("user already exists");
+  }
+}
+
+
+openDatabase();
+// createUser("test1","testpass");
+listUsers();
 
 export default function SignupScreen() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSignUp = () => {
+    createUser(username,password);
+  };
+
     return (
         <ThemedView style={styles.titleContainer}>
           <ThemedText type="title">Welcome!</ThemedText>
           <View style={styles.buttonContainer}>
+           <TextInput
+           style={{padding: 10, borderWidth: 1}}
+           placeholder='Username'
+           onChangeText={setUsername}
+           />
+           <TextInput
+           style={{padding: 10, borderWidth: 1}}
+           placeholder='Password'
+           onChangeText={setPassword}
+           secureTextEntry={true}
+           />
           <Button
             title="Sign up"
-          //   onPress={() => navigation.navigate('SignUp')}
-          />
-        </View>
-        <View style={styles.buttonContainer}>
-          <Button
-            title="Log in"
-          //   onPress={() => navigation.navigate('Login')}
+            onPress={handleSignUp}
           />
         </View>
       </ThemedView>
@@ -45,6 +134,5 @@ export default function SignupScreen() {
     buttonContainer: {
       marginVertical: 10,
       width: '80%',
-      backgroundColor: "#FFC0CB",
     },
   });

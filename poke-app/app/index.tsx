@@ -2,12 +2,12 @@ import { Image,View, Button, StyleSheet, Platform } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 
-import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
   return (
+
     <View style={styles.container}>
       <Image source={require('@/assets/images/Poke-App_Logo.png')}style={styles.headerImage} resizeMode="contain"/>
       <ThemedView style={styles.buttonContainer}>
