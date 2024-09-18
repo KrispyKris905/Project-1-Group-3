@@ -16,7 +16,7 @@ import * as SQLite from "expo-sqlite";
 
 async function openDatabase() {
 
-  const db = SQLite.openDatabaseSync("users.db");
+  const db = await SQLite.openDatabaseAsync("users.db");
   await db.execAsync(`
     PRAGMA journal_mode = WAL;
     CREATE TABLE IF NOT EXISTS users (
@@ -49,7 +49,7 @@ async function listUsers() {
   console.log(allUsers);
 }
 
-async function compareUsernames(username: string): Promise<boolean> {
+export async function compareUsernames(username: string): Promise<boolean> {
   
   const db = SQLite.openDatabaseSync("users.db");
 
@@ -58,7 +58,7 @@ async function compareUsernames(username: string): Promise<boolean> {
       'SELECT * FROM users WHERE username = ?', [username]);
       
     if (result.length > 0) {
-      return false; //username already exists
+      return false; //username exists
     } 
     return true; //username does not exist
 }
@@ -70,13 +70,15 @@ async function createUser(username: string, password: string) {
       INSERT INTO users (username, password) VALUES ('${username}', '${password}');`
     );
     console.log("user created");
+    listUsers();
   } else { // user exists
+    alert("Username taken");
     console.log("user already exists");
   }
 }
 
 
-const db = openDatabase();
+openDatabase();
 // createUser("test1","testpass");
 listUsers();
 
@@ -101,6 +103,7 @@ export default function SignupScreen() {
            style={{padding: 10, borderWidth: 1}}
            placeholder='Password'
            onChangeText={setPassword}
+           secureTextEntry={true}
            />
           <Button
             title="Sign up"
