@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import { Text, Image, View, StyleSheet, FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import {fetchPokemonList} from './pokeDb';
 
 interface Pokemon {
@@ -8,7 +7,6 @@ interface Pokemon {
     image: string;
   }
 export default function ListScreen() {
-  const navigation = useNavigation();
   const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
   useEffect(() => {
     const getPokemonData = async () => {

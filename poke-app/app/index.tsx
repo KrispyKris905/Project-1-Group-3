@@ -1,11 +1,18 @@
-import { Image,View, Button, StyleSheet, Platform } from 'react-native';
-
+import { Image,View, Button, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
 import { ThemedView } from '@/components/ThemedView';
+
+import {useEffect} from 'react';
+import { openUserDatabase,listUsers } from './SignUp';
 
 export default function HomeScreen() {
   const navigation = useNavigation();
+
+  useEffect(() => {
+    openUserDatabase(); // Initialize user database
+    listUsers(); // List all users in database
+}, []);
+
   return (
 
     <View style={styles.container}>

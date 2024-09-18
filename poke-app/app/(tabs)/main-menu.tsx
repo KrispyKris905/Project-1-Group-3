@@ -2,8 +2,10 @@ import React from 'react';
 import { Text, View, Button, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
+
 export default function MenuScreen() {
   const navigation = useNavigation();
+
 
   return (
     <View style={styles.container}>
@@ -12,7 +14,7 @@ export default function MenuScreen() {
       <View style={styles.buttonContainer}>
         <Button
           title="View Pokémon List"
-        //   onPress={() => navigation.navigate('PokemonList')}
+        onPress={() => navigation.navigate('pokemon-list' as never)}
         />
       </View>
 
