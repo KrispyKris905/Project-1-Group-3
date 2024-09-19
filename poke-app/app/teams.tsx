@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, Button, StyleSheet, TextInput, ScrollView, TouchableOpacity } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { SQLiteProvider, useSQLiteContext, SQLiteDatabase } from 'expo-sqlite'; // Use SQLiteProvider and useSQLiteContext
-import { getLoggedInUserId } from './Login';
+import { SQLiteProvider, useSQLiteContext, SQLiteDatabase } from 'expo-sqlite';
 import { useNavigation } from '@react-navigation/native';
+import * as pokeDb from './poke';
+import { getLoggedInUserId } from './Login';
 
 // Interface for Team object
 interface Team {
@@ -21,25 +22,6 @@ async function listTeams(db: SQLiteDatabase): Promise<Team[]> {
   } catch (error) {
     console.error("Error fetching teams:", error);
     return [];
-  }
-}
-
-// Function to create a team
-async function createTeam(db: SQLiteDatabase, name: string) {
-  const userId = getLoggedInUserId(); // Get logged-in user ID
-  try {
-    await db.runAsync(`INSERT INTO teams (name, user_id) VALUES (?, ?)`, [name, userId]);
-  } catch (error) {
-    console.error("Error creating team:", error);
-  }
-}
-
-// Function to delete a team by ID
-async function deleteTeam(db: SQLiteDatabase, id: number) {
-  try {
-    await db.runAsync(`DELETE FROM teams WHERE id = ?`, [id]);
-  } catch (error) {
-    console.error("Error deleting team:", error);
   }
 }
 
@@ -71,14 +53,15 @@ export function Content() {
   }, [db]); // Run once when the component mounts
 
   const handleCreateTeam = async () => {
-    await createTeam(db, teamName);
+    const userId = getLoggedInUserId(); // Get logged-in user ID
+    await pokeDb.createTeam(teamName, userId); // Pass the db instance from the context
     setTeamName('');
     const result = await listTeams(db);
     setTeams(result); // Update the team list after creating a team
   };
 
   const handleDeleteTeam = async (id: number) => {
-    await deleteTeam(db, id);
+    await pokeDb.deleteTeam(id); // Pass the db instance from the context
     const result = await listTeams(db); // Re-fetch the team list after deletion
     setTeams(result);
   };
@@ -118,7 +101,6 @@ export function Content() {
     </ThemedView>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {

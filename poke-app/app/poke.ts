@@ -1,5 +1,6 @@
 import * as SQLite from 'expo-sqlite';
 
+
 let db: SQLite.SQLiteDatabase;
 
 // Open the database and create users, teams, and team_pokemon 
@@ -95,4 +96,25 @@ export async function createUser(username: string, password: string) {
 }
 
 // Teams Table Functions
+
+// Function to create a team
+export async function createTeam(name: string, userId: number) {
+    
+    try {
+      await db.runAsync(`INSERT INTO teams (name, user_id) VALUES (?, ?)`, [name, userId]);
+    } catch (error) {
+      console.error("Error creating team:", error);
+    }
+  }
+  
+  // Function to delete a team by ID
+export async function deleteTeam(id: number) {
+    try {
+      await db.runAsync(`DELETE FROM teams WHERE id = ?`, [id]);
+    } catch (error) {
+      console.error("Error deleting team:", error);
+    }
+  }
+
+// Pokemon in a Team Functions
 
