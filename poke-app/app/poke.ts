@@ -99,7 +99,9 @@ export async function createUser(username: string, password: string) {
 
 // Function to create a team
 export async function createTeam(name: string, userId: number) {
-    
+    if (!db) {
+        await openPokeDatabase();
+    }
     try {
       await db.runAsync(`INSERT INTO teams (name, user_id) VALUES (?, ?)`, [name, userId]);
     } catch (error) {
@@ -109,6 +111,9 @@ export async function createTeam(name: string, userId: number) {
   
   // Function to delete a team by ID
 export async function deleteTeam(id: number) {
+    if (!db) {
+        await openPokeDatabase();
+    }
     try {
       await db.runAsync(`DELETE FROM teams WHERE id = ?`, [id]);
     } catch (error) {
