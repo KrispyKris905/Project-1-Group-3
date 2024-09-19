@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text, View, Button, StyleSheet, TextInput, ScrollView, TouchableOpacity } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import * as SQLite from "expo-sqlite";
 import {SQLiteProvider} from 'expo-sqlite';
-import { loggedInUserId } from '../Login';
+import { getLoggedInUserId } from './Login';
+import { useNavigation } from '@react-navigation/native';
+
+
 
 async function openTeamDatabase() {
   const db = await SQLite.openDatabaseAsync("teams.db");
@@ -34,7 +37,7 @@ async function listTeams(db: any): Promise<Team[]> {
 async function createTeam(name: string) {
 
     const db = await SQLite.openDatabaseAsync('teams.db');
-    await db.execAsync(`INSERT INTO teams (name, user_id) VALUES ('${name}', '${loggedInUserId}')`);
+    await db.execAsync(`INSERT INTO teams (name, user_id) VALUES ('${name}', '${getLoggedInUserId()}')`);
 }
 
 // Delete a team from the database by ID
@@ -62,6 +65,8 @@ interface Team {
 export function Content() {
     const [teamname, setTeamName] = useState('');
     const [teams, setTeams] = useState<Team[]>([]);
+
+    const navigation = useNavigation();
 
     const db=SQLite.useSQLiteContext();
 
@@ -92,37 +97,47 @@ export function Content() {
     setTeams(result);
   };
 
+
   return (
     <ThemedView style={styles.container}>
-      <ThemedText type="title">Teams</ThemedText>
-      <View>
-        <TextInput
-        placeholder='Team Name'
-        onChangeText={setTeamName}
-        />
-        <Button
-            title="Create Team"
-            onPress={handleCreateTeam}
-            disabled={teamname.trim() === ''}
-        />
+        <View><ThemedText type="title">Teams</ThemedText></View>
+      
+      
+        <View>
+            <TextInput
+            placeholder='Team Name'
+            onChangeText={setTeamName}
+            />
+            <Button
+                title="Create Team"
+                onPress={handleCreateTeam}
+                disabled={teamname.trim() === ''}
+            />
 
-        <Text>Created Teams</Text>
+            <Text>Created Teams</Text>
             {teams.map((team)=>(
                 <View key={team.id}>
+                 
                     <Text>{`${team.name}`}</Text>
-                    <TouchableOpacity onPress={() => handleDeleteTeam(team.id)}>
-                        <Text>Delete</Text>
-                    </TouchableOpacity>
-                    </View>
+            
+                  <TouchableOpacity onPress={() => handleDeleteTeam(team.id)}>
+                      <Text>Delete</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => navigation.navigate('team-pokemon' as never)}>
+                      <Text>Edit Team</Text>
+                  </TouchableOpacity>
+                </View>
             ))}
-      </View>
-
+        </View>
     </ThemedView>
+    
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: 'flex-start',
+    alignItems:'center',
     padding: 20,
     backgroundColor: '#f8f8f8',
     flex: 1,

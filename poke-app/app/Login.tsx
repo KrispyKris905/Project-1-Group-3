@@ -5,37 +5,46 @@ import { useNavigation } from '@react-navigation/native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import * as SQLite from "expo-sqlite";
-import {compareUsernames} from './SignUp';
+import * as pokeDb from './poke';
 
-export let loggedInUserId=0;
+let loggedInUserId = 0;
+
+export const getLoggedInUserId = () => loggedInUserId;
+
+export const setLoggedInUserId = (newId: number) => {
+  loggedInUserId = newId;
+};
 
 async function checkLogin(username: string, password: string, navigation: any) {
-  const db = await SQLite.openDatabaseAsync("users.db");
+  const db = await pokeDb.openUserDatabase();
 
-  if (await compareUsernames(username) == true) { // user doesnt exist
-    alert("Username not found");
-  } else { // username found
-    // check if passwords match
-    const result = await db.getAllAsync(
-      'SELECT * FROM users WHERE username = ? AND password = ?', [username, password]);
-    
-      if (result.length > 0) {
-        getUserId(username);
-        navigation.navigate('(tabs)' as never);
-      } else {
-        alert("Wrong password");
-      }
-
-  }
+    if (await pokeDb.compareUsernames(username) == true) { // user doesnt exist
+      alert("Username not found");
+    } else { // username found
+      // check if passwords match
+      const result = await db.getAllAsync(
+        'SELECT * FROM users WHERE username = ? AND password = ?', [username, password]);
+      
+        if (result.length > 0) {
+          getUserId(username);
+          navigation.navigate('(tabs)' as never);
+        } else {
+          alert("Wrong password");
+        }
+    }
 
 }
 
 async function getUserId(username: string) {
-  const db = await SQLite.openDatabaseAsync("users.db");
-  const userId = await db.getFirstAsync(`SELECT id FROM users WHERE username = ?`, [username]) as { id: number };
-  loggedInUserId = userId.id;
-  console.log("loggedInUserId: ",loggedInUserId);
+  const db = await pokeDb.openUserDatabase();
+
+    const userId = await db.getFirstAsync(`SELECT id FROM users WHERE username = ?`, [username]) as { id: number };
+    setLoggedInUserId(userId.id);
+    console.log("loggedInUserId: ",loggedInUserId);
+
 }
+
+
 
 export default function LoginScreen() {
   const [username, setUsername] = useState("");
