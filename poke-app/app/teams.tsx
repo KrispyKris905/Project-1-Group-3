@@ -2,31 +2,21 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, Button, StyleSheet, TextInput, ScrollView, TouchableOpacity } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import * as SQLite from "expo-sqlite";
-import {SQLiteProvider} from 'expo-sqlite';
+import { SQLiteProvider, useSQLiteContext, SQLiteDatabase } from 'expo-sqlite'; // Use SQLiteProvider and useSQLiteContext
 import { getLoggedInUserId } from './Login';
 import { useNavigation } from '@react-navigation/native';
 
-
-
-async function openTeamDatabase() {
-  const db = await SQLite.openDatabaseAsync("teams.db");
-
-  await db.execAsync(`
-    CREATE TABLE IF NOT EXISTS teams (
-      id INTEGER PRIMARY KEY NOT NULL, 
-      name TEXT NOT NULL, 
-      user_id INTEGER,
-      FOREIGN KEY(user_id) REFERENCES users(id)
-    );
-  `);
+// Interface for Team object
+interface Team {
+  name: string;
+  id: number;
 }
 
-async function listTeams(db: any): Promise<Team[]> {
+// Function to list teams
+async function listTeams(db: SQLiteDatabase): Promise<Team[]> {
   try {
-    const result = await db.getAllAsync('SELECT * FROM teams');
-    console.log("listTeams:");
-    console.log(result);
+    const result = await db.getAllAsync<Team>('SELECT * FROM teams');
+    console.log("Teams:", result);
     return result;
   } catch (error) {
     console.error("Error fetching teams:", error);
@@ -34,110 +24,106 @@ async function listTeams(db: any): Promise<Team[]> {
   }
 }
 
-async function createTeam(name: string) {
-
-    const db = await SQLite.openDatabaseAsync('teams.db');
-    await db.execAsync(`INSERT INTO teams (name, user_id) VALUES ('${name}', '${getLoggedInUserId()}')`);
+// Function to create a team
+async function createTeam(db: SQLiteDatabase, name: string) {
+  const userId = getLoggedInUserId(); // Get logged-in user ID
+  try {
+    await db.runAsync(`INSERT INTO teams (name, user_id) VALUES (?, ?)`, [name, userId]);
+  } catch (error) {
+    console.error("Error creating team:", error);
+  }
 }
 
-// Delete a team from the database by ID
-async function deleteTeam(id: number) {
-    const db = await SQLite.openDatabaseAsync('teams.db');
-    await db.execAsync(`DELETE FROM teams WHERE id = ${id};`);
+// Function to delete a team by ID
+async function deleteTeam(db: SQLiteDatabase, id: number) {
+  try {
+    await db.runAsync(`DELETE FROM teams WHERE id = ?`, [id]);
+  } catch (error) {
+    console.error("Error deleting team:", error);
   }
+}
 
+// App component that provides SQLite context
 export default function App() {
-    return (
-      <View style={styles.container}>
-        <SQLiteProvider databaseName="teams.db">
-          <Content />
-        </SQLiteProvider>
-      </View>
-    );
-  }
-
-interface Team {
-    name: string;
-    id: number;
-
+  return (
+    <View style={styles.container}>
+      <SQLiteProvider databaseName="poke.db">
+        <Content />
+      </SQLiteProvider>
+    </View>
+  );
 }
 
+// Content component that handles team display and interactions
 export function Content() {
-    const [teamname, setTeamName] = useState('');
-    const [teams, setTeams] = useState<Team[]>([]);
+  const [teamName, setTeamName] = useState('');
+  const [teams, setTeams] = useState<Team[]>([]);
+  const navigation = useNavigation();
+  const db = useSQLiteContext(); // Get the SQLite database instance from the context
 
-    const navigation = useNavigation();
-
-    const db=SQLite.useSQLiteContext();
-
+  // Fetch teams when the component mounts
   useEffect(() => {
-    // Initialize the database and list teams after it is set up
-    async function setupDatabase () {
-      const result = await db.getAllAsync<Team>(`SELECT * FROM teams`);
-      console.log("teams: ",result);
+    async function fetchTeams() {
+      const result = await listTeams(db);
       setTeams(result);
-    };
-    openTeamDatabase();
-    setupDatabase();
-  }, []); // Runs once when the component mounts
+    }
+    fetchTeams();
+  }, [db]); // Run once when the component mounts
 
   const handleCreateTeam = async () => {
-    await createTeam(teamname);
+    await createTeam(db, teamName);
     setTeamName('');
-
     const result = await listTeams(db);
-    setTeams(result);
+    setTeams(result); // Update the team list after creating a team
   };
 
   const handleDeleteTeam = async (id: number) => {
-    await deleteTeam(id);
-    
-    // Re-fetch teams after deletion
-    const result = await listTeams(db);
+    await deleteTeam(db, id);
+    const result = await listTeams(db); // Re-fetch the team list after deletion
     setTeams(result);
   };
 
-
   return (
     <ThemedView style={styles.container}>
-        <View><ThemedText type="title">Teams</ThemedText></View>
-      
-      
-        <View>
-            <TextInput
-            placeholder='Team Name'
-            onChangeText={setTeamName}
-            />
-            <Button
-                title="Create Team"
-                onPress={handleCreateTeam}
-                disabled={teamname.trim() === ''}
-            />
+      <View>
+        <ThemedText type="title">Teams</ThemedText>
+      </View>
+      <View>
+        <TextInput
+          placeholder="Team Name"
+          value={teamName}
+          onChangeText={setTeamName}
+        />
+        <Button
+          title="Create Team"
+          onPress={handleCreateTeam}
+          disabled={teamName.trim() === ''}
+        />
 
-            <Text>Created Teams</Text>
-            {teams.map((team)=>(
-                <View key={team.id}>
-                 
-                    <Text>{`${team.name}`}</Text>
-            
-                  <TouchableOpacity onPress={() => handleDeleteTeam(team.id)}>
-                      <Text>Delete</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => navigation.navigate('team-pokemon' as never)}>
-                      <Text>Edit Team</Text>
-                  </TouchableOpacity>
-                </View>
-            ))}
-        </View>
+        <Text>Created Teams</Text>
+        <ScrollView>
+          {teams.map((team) => (
+            <View key={team.id}>
+              <Text>{`${team.name}`}</Text>
+              <TouchableOpacity onPress={() => handleDeleteTeam(team.id)}>
+                <Text>Delete</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => navigation.navigate('team-pokemon' as never)}>
+                <Text>Edit Team</Text>
+              </TouchableOpacity>
+            </View>
+          ))}
+        </ScrollView>
+      </View>
     </ThemedView>
-    
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'flex-start',
-    alignItems:'center',
+    alignItems: 'center',
     padding: 20,
     backgroundColor: '#f8f8f8',
     flex: 1,

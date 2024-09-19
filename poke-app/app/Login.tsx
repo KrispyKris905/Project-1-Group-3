@@ -16,7 +16,7 @@ export const setLoggedInUserId = (newId: number) => {
 };
 
 async function checkLogin(username: string, password: string, navigation: any) {
-  const db = await pokeDb.openUserDatabase();
+  const db = await pokeDb.openPokeDatabase();
 
     if (await pokeDb.compareUsernames(username) == true) { // user doesnt exist
       alert("Username not found");
@@ -36,7 +36,7 @@ async function checkLogin(username: string, password: string, navigation: any) {
 }
 
 async function getUserId(username: string) {
-  const db = await pokeDb.openUserDatabase();
+  const db = await pokeDb.openPokeDatabase();
 
     const userId = await db.getFirstAsync(`SELECT id FROM users WHERE username = ?`, [username]) as { id: number };
     setLoggedInUserId(userId.id);

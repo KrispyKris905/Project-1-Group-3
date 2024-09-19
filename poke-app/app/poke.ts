@@ -5,7 +5,7 @@ let db: SQLite.SQLiteDatabase;
 // Open the database and create users, teams, and team_pokemon 
 // tables if they don't exist
 
-export async function openUserDatabase(): Promise<SQLite.SQLiteDatabase> {
+export async function openPokeDatabase(): Promise<SQLite.SQLiteDatabase> {
     if (!db) {
         db = await SQLite.openDatabaseAsync('poke.db');
     }
@@ -53,7 +53,7 @@ export async function openUserDatabase(): Promise<SQLite.SQLiteDatabase> {
 // List all users and log them to the console
 export async function listUsers() {
     if (!db) {
-        await openUserDatabase();
+        await openPokeDatabase();
     }
     try {
         const allUsers = await db.getAllAsync('SELECT * FROM users');
@@ -67,7 +67,7 @@ export async function listUsers() {
 // Check if the username exists
 export async function compareUsernames(username: string): Promise<boolean> {
     if (!db) {
-        await openUserDatabase();
+        await openPokeDatabase();
     }
   
     const result = await db.getAllAsync('SELECT * FROM users WHERE username = ?', [username]);
@@ -77,7 +77,7 @@ export async function compareUsernames(username: string): Promise<boolean> {
 // Create a new user if the username is not taken
 export async function createUser(username: string, password: string) {
     if (!db) {
-        await openUserDatabase();
+        await openPokeDatabase();
     }
     try {
         if (await compareUsernames(username)) {
@@ -95,3 +95,4 @@ export async function createUser(username: string, password: string) {
 }
 
 // Teams Table Functions
+

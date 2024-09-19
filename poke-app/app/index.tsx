@@ -9,7 +9,7 @@ export default function HomeScreen() {
 
   useEffect(() => {
     const initDatabase = async () => {
-      await pokeDb.openUserDatabase(); // Initialize user database
+      await pokeDb.openPokeDatabase(); // Initialize database
       await pokeDb.listUsers(); // List all users in database
     };
     initDatabase();
