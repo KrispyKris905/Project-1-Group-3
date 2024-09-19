@@ -15,7 +15,7 @@ export const initDatabase = () => {
       "CREATE TABLE IF NOT EXISTS pokemon (id INTEGER PRIMARY KEY NOT NULL, name TEXT, type TEXT);"
     );
     tx.executeSql(
-      "CREATE TABLE IF NOT EXISTS teams (id INTEGER PRIMARY KEY NOT NULL, name TEXT, user_id INTEGER, FOREIGN KEY(user_id) REFERENCES users(id));"
+      
     );
     tx.executeSql(
       "CREATE TABLE IF NOT EXISTS team_pokemon (team_id INTEGER, pokemon_id INTEGER, FOREIGN KEY(team_id) REFERENCES teams(id), FOREIGN KEY(pokemon_id) REFERENCES pokemon(id));"
@@ -25,7 +25,7 @@ export const initDatabase = () => {
 
 export const fetchPokemonList = async () => {
     try {
-        const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=100');
+        const response = await axios.get('https://pokeapi.co/api/v2/pokemon?limit=10');
         const pokemonList = response.data.results;
 
         const detailedPokemonList = await Promise.all(

@@ -17,12 +17,12 @@ export default function ListScreen() {
     getPokemonData();
   }, []);
      // Render each item in the list
-     const renderItem = ({ item }: { item: Pokemon }) => (
+     const RenderItem = React.memo(({ item }: { item: Pokemon }) => (
         <View style={styles.itemContainer}>
             <Image style={styles.tinyLogo} source={{uri: item.image}}/>
             <Text style={styles.itemText}>{item.name}</Text>
         </View>
-      );
+      ));
 
   return (
     <View style={styles.container}>
@@ -30,7 +30,7 @@ export default function ListScreen() {
       <FlatList
         data={pokemonList}
         keyExtractor={(item) => item.name}
-        renderItem={renderItem}
+        renderItem={({ item }) => <RenderItem item={item} />}
         // onEndReached={fetchMorePokemon}
       />
     </View>

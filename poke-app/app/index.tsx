@@ -3,15 +3,19 @@ import { useNavigation } from '@react-navigation/native';
 import { ThemedView } from '@/components/ThemedView';
 
 import {useEffect} from 'react';
-import { openUserDatabase,listUsers } from './SignUp';
+import * as pokeDb from './poke';
 
 export default function HomeScreen() {
-  const navigation = useNavigation();
 
   useEffect(() => {
-    openUserDatabase(); // Initialize user database
-    listUsers(); // List all users in database
-}, []);
+    const initDatabase = async () => {
+      await pokeDb.openPokeDatabase(); // Initialize database
+      await pokeDb.listUsers(); // List all users in database
+    };
+    initDatabase();
+  }, []);
+
+  const navigation = useNavigation();
 
   return (
 

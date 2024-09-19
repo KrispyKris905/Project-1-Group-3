@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text, View, Button, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { setLoggedInUserId } from '../Login';
 
 
 export default function MenuScreen() {
@@ -21,7 +22,7 @@ export default function MenuScreen() {
       <View style={styles.buttonContainer}>
         <Button
           title="Team Manager"
-        //   onPress={() => navigation.navigate('TeamManager')}
+          onPress={() => navigation.navigate('teams' as never)}
         />
       </View>
 
@@ -35,7 +36,10 @@ export default function MenuScreen() {
       <View style={styles.buttonContainer}>
         <Button
           title="Sign out"
-          onPress={() => navigation.navigate('index' as never)}
+          onPress={() => {
+            setLoggedInUserId(0);
+            navigation.navigate('index' as never);
+          }}
         />
       </View>
 

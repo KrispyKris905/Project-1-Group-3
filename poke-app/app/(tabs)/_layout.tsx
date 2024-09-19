@@ -4,6 +4,7 @@ import React from 'react';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { setStatusBarHidden } from 'expo-status-bar';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -33,5 +34,6 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
+    
   );
 }
