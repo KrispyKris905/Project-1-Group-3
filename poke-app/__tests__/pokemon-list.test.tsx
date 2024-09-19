@@ -1,6 +1,6 @@
 import React from "react";
 import { render, waitFor } from '@testing-library/react-native';
-import ListScreen from "./pokemon-list";
+import ListScreen from "../app/(tabs)/pokemon-list";
 
 test("renders the ListScreen component correctly", async () => {
   const { getByText } = render(<ListScreen />);
@@ -9,4 +9,9 @@ test("renders the ListScreen component correctly", async () => {
   await waitFor(() => {
     expect(getByText("Pokémon List")).toBeTruthy();
   });
+
+  await waitFor(() => {
+    expect(getByText("bulbasaur")).toBeTruthy();
+  });
+
 });
