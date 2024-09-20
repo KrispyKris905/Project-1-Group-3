@@ -1,4 +1,5 @@
 import React from 'react';
+import HomeScreen from '@/app';
 import { render, screen } from '@testing-library/react-native';
 import { View, Text, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';

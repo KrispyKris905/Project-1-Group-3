@@ -53,7 +53,7 @@ export default function LoginScreen() {
   const navigation = useNavigation();
 
   const handleLogin = () => {
-    checkLogin(username,password, navigation);
+    checkLogin(username, password, navigation);
 
   };
 
@@ -66,11 +66,13 @@ export default function LoginScreen() {
         <TextInput
            style={{padding: 10, borderWidth: 1}}
            placeholder='Username'
+           value={username}
            onChangeText={setUsername}
            />
            <TextInput
            style={{padding: 10, borderWidth: 1}}
            placeholder='Password'
+           value={password}
            onChangeText={setPassword}
            secureTextEntry={true}
            />
