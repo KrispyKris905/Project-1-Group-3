@@ -12,7 +12,7 @@ import SignupScreen from './SignUp';
 import MenuScreen from './main-menu';
 import ListScreen from './pokemon-list';
 import TeamsScreen from './teams';
-import PokemonGrid from './team-pokemon';
+import PokemonTeam from './team-pokemon';
 
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -45,7 +45,7 @@ export default function RootLayout() {
         <Stack.Screen name="SignUp" component={SignupScreen}/>
         <Stack.Screen name="pokemon-list" component={ListScreen}/>
         <Stack.Screen name="teams" component={TeamsScreen}/>
-        <Stack.Screen name="team-pokemon" component={PokemonGrid}/>
+        <Stack.Screen name="team-pokemon" component={PokemonTeam}/>
       </Stack.Navigator>
   </SQLiteProvider>
 
