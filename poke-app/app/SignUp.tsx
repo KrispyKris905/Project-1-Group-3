@@ -21,11 +21,13 @@ export default function SignupScreen() {
           style={{ padding: 10, borderWidth: 1 }}
           placeholder='Username'
           onChangeText={setUsername}
+          value={username}
         />
         <TextInput
           style={{ padding: 10, borderWidth: 1 }}
           placeholder='Password'
           onChangeText={setPassword}
+          value={password}
           secureTextEntry={true}
         />
         <Button
