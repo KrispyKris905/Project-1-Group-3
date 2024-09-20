@@ -7,9 +7,7 @@ let db: SQLite.SQLiteDatabase;
 // tables if they don't exist
 
 export async function openPokeDatabase(): Promise<SQLite.SQLiteDatabase> {
-    if (!db) {
         db = await SQLite.openDatabaseAsync('poke.db');
-    }
     try {
       await db.execAsync(`
         PRAGMA journal_mode = WAL;

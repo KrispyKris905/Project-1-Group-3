@@ -1,19 +1,15 @@
 import { Image,View, Button, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { ThemedView } from '@/components/ThemedView';
-
-import {useEffect} from 'react';
-import * as pokeDb from './poke';
 
 export default function HomeScreen() {
+  return (
+    <View style={styles.container}>
+        <Content />
+    </View>
+  );
+}
 
-  useEffect(() => {
-    const initDatabase = async () => {
-      await pokeDb.openPokeDatabase(); // Initialize database
-      await pokeDb.listUsers(); // List all users in database
-    };
-    initDatabase();
-  }, []);
+export function Content() {
 
   const navigation = useNavigation();
 
@@ -21,18 +17,18 @@ export default function HomeScreen() {
 
     <View style={styles.container}>
       <Image source={require('@/assets/images/Poke-App_Logo.png')}style={styles.headerImage} resizeMode="contain"/>
-      <ThemedView style={styles.buttonContainer}>
+      <View style={styles.buttonContainer}>
         <Button
           title="Sign up" 
           onPress={() => navigation.navigate('SignUp' as never)}
         />
-      </ThemedView>
-      <ThemedView style={styles.buttonContainer}>
+      </View>
+      <View style={styles.buttonContainer}>
         <Button
           title="Log in"
           onPress={() => navigation.navigate('Login' as never)}
         />
-      </ThemedView>
+      </View>
     </View>
   );
 }
@@ -50,6 +46,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     width: 400,
     height: 400,
+    marginBottom: 10,
   },
   titleContainer: {
     flexDirection: 'row',
@@ -60,16 +57,9 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
   buttonContainer: {
     marginVertical: 10,
-    width: '80%',
+    width: '100%',
     backgroundColor: "#FFC0CB",
   },
 });

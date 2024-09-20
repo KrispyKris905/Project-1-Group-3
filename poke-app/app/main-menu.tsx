@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, View, Button, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { setLoggedInUserId } from '../Login';
+import { setLoggedInUserId } from './Login';
 
 
 export default function MenuScreen() {

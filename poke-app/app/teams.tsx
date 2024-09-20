@@ -26,12 +26,12 @@ async function listTeams(db: SQLiteDatabase): Promise<Team[]> {
 }
 
 // App component that provides SQLite context
-export default function App() {
+export default function TeamsScreen() {
   return (
     <View style={styles.container}>
-      <SQLiteProvider databaseName="poke.db">
+      
         <Content />
-      </SQLiteProvider>
+      
     </View>
   );
 }

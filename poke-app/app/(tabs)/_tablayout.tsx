@@ -1,22 +1,27 @@
-import { Tabs } from 'expo-router';
+import { createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React from 'react';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { setStatusBarHidden } from 'expo-status-bar';
+import MenuScreen from '../main-menu';
+import ListScreen from '../pokemon-list';
+
+const Tab = createBottomTabNavigator();
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-      }}>
-      <Tabs.Screen
+    <Tab.Navigator
+    screenOptions={{
+      tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+      headerShown: false,
+    }}>
+      
+      <Tab.Screen
         name="pokemon-list"
+        component={ListScreen}
         options={{
           title: 'Home',
           tabBarIcon: ({ color, focused }) => (
@@ -24,8 +29,9 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
+      <Tab.Screen
         name="main-menu"
+        component={MenuScreen}
         options={{
           title: 'Menu',
           tabBarIcon: ({ color, focused }) => (
@@ -33,7 +39,7 @@ export default function TabLayout() {
           ),
         }}
       />
-    </Tabs>
+    </Tab.Navigator>
     
   );
 }
