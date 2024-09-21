@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, Button, StyleSheet, TextInput, ScrollView, TouchableOpacity } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { SQLiteProvider, useSQLiteContext, SQLiteDatabase } from 'expo-sqlite';
+import { useSQLiteContext, SQLiteDatabase } from 'expo-sqlite';
 import { useNavigation } from '@react-navigation/native';
 import * as pokeDb from './poke';
 import { getLoggedInUserId } from './Login';

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, FlatList, StyleSheet, Button, Alert } from 'react-native';
+import { View, Text, Image, FlatList, StyleSheet, Button, TextInput } from 'react-native';
 import { useSQLiteContext, SQLiteDatabase } from 'expo-sqlite';
 import axios from "axios"
 
@@ -21,7 +21,7 @@ async function listPokemon(db: SQLiteDatabase): Promise<Pokemon[]> {
 }
 
 async function fetchPokemon(id: number): Promise<Pokemon> {
-  console.log("id:",id);
+  console.log("id:", id);
   try {
     const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
     const pokemon = response.data;
@@ -30,8 +30,8 @@ async function fetchPokemon(id: number): Promise<Pokemon> {
       image: pokemon.sprites.front_default
     };
   } catch (error) {
-    console.error("Error fetching pokemon:",error);
-    return {name:"",image:""};
+    console.error("Error fetching pokemon:", error);
+    return { name: "", image: "" };
   }
 }
 
@@ -39,7 +39,7 @@ async function fetchPokemon(id: number): Promise<Pokemon> {
 export default function PokemonTeam() {
   return (
     <View style={styles.container}>
-        <PokemonGrid />
+      <PokemonGrid />
     </View>
   );
 }
@@ -47,6 +47,7 @@ export default function PokemonTeam() {
 // Content component that handles team display and interactions
 export function PokemonGrid() {
   const [pokemonList, setPokemonList] = useState<(Pokemon | null)[]>(Array(6).fill(null)); // Initialize 6 empty slots
+  const [pokemonIds, setPokemonIds] = useState<string[]>(Array(6).fill('')); // Separate pokemon ID for each slot
   const db = useSQLiteContext();
 
   // Fetch pokemon in the selected team when component mounts
@@ -63,12 +64,22 @@ export function PokemonGrid() {
 
   // Add a pokemon to the specific slot
   const handleAddPokemon = async (index: number) => {
-    const newPokemon= await fetchPokemon(8);
+    const pokemonId = pokemonIds[index]; // Get the ID for the specific slot
+    if (!pokemonId) {
+      return; // If no ID is entered, don't add
+    }
+    const newPokemon = await fetchPokemon(Number(pokemonId));
 
     setPokemonList((prevList) => {
       const updatedList = [...prevList];
-      updatedList[index] = newPokemon;
+      updatedList[index] = newPokemon; // Update the list with the resolved Pokemon object
       return updatedList;
+    });
+
+    setPokemonIds((prevIds) => {
+      const updatedIds = [...prevIds];
+      updatedIds[index] = ''; // Clear the input for this slot after adding
+      return updatedIds;
     });
   };
 
@@ -89,7 +100,22 @@ export function PokemonGrid() {
           <Text style={styles.itemText}>{item.name}</Text>
         </>
       ) : (
-        <Text style={styles.itemText}>Empty Slot</Text>
+        <>
+          <Text style={styles.itemText}>Empty Slot</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Pokemon ID"
+            value={pokemonIds[index]} // Use the specific input for each slot
+            keyboardType="numeric"
+            onChangeText={(text) =>
+              setPokemonIds((prevIds) => {
+                const updatedIds = [...prevIds];
+                updatedIds[index] = text; // Update the specific ID for this slot
+                return updatedIds;
+              })
+            }
+          />
+        </>
       )}
       <Button
         title={item ? 'Delete' : 'Add'}
@@ -140,7 +166,7 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 15,
     width: 150,
-    height: 150,
+    height: 200,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -150,5 +176,13 @@ const styles = StyleSheet.create({
   tinyLogo: {
     width: 70,
     height: 70,
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    width: 100,
+    textAlign: 'center',
+    marginVertical: 10,
   },
 });
