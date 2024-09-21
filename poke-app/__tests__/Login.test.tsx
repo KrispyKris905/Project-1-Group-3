@@ -58,7 +58,7 @@ describe('LoginScreen', () => {
     // Mock the database check to find the username but return wrong password
     (pokeDb.compareUsernames as jest.Mock).mockResolvedValue(true);
     (pokeDb.openPokeDatabase as jest.Mock).mockReturnValue({
-      getAllAsync: jest.fn().mockResolvedValue([]), // Simulate wrong password
+      getAllAsync: jest.fn().mockResolvedValue([]), //  wrong password
     });
 
     global.alert = jest.fn();
@@ -90,7 +90,7 @@ describe('LoginScreen', () => {
     fireEvent.press(loginButton);
 
     await waitFor(() => {
-      // You can mock and verify that navigation has been called
+      // mock and verify that navigation has been called
       expect(mockNavigation).toHaveBeenCalled();
     });
   });
