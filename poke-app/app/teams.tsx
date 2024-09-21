@@ -13,6 +13,14 @@ interface Team {
   id: number;
 }
 
+let currentTeamId=0;
+
+export const getCurrentTeamId = () => currentTeamId;
+
+export const setCurrentTeamId = (newId: number) => {
+  currentTeamId = newId;
+};
+
 // Function to list teams
 async function listTeams(db: SQLiteDatabase): Promise<Team[]> {
   try {
@@ -91,7 +99,12 @@ export function Content() {
               <TouchableOpacity onPress={() => handleDeleteTeam(team.id)}>
                 <Text>Delete</Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => navigation.navigate('team-pokemon' as never)}>
+              <TouchableOpacity onPress={() => {
+                setCurrentTeamId(team.id);
+                navigation.navigate('team-pokemon' as never);
+              }
+                
+                }>
                 <Text>Edit Team</Text>
               </TouchableOpacity>
             </View>

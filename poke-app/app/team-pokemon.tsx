@@ -2,23 +2,40 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, FlatList, StyleSheet, Button, TextInput } from 'react-native';
 import { useSQLiteContext, SQLiteDatabase } from 'expo-sqlite';
 import axios from "axios"
+import { getCurrentTeamId } from './teams';
+import {addPokemonToTeam, deletePokemon} from './poke';
 
 interface Pokemon {
   name: string;
   image: string;
 }
 
-// Function to list 6 pokemon
-async function listPokemon(db: SQLiteDatabase): Promise<Pokemon[]> {
+interface TeamPokemon {
+  pokemonId: number;
+  pokemon: Pokemon;
+}
+
+async function listPokemon(db: SQLiteDatabase, teamId: Number): Promise<TeamPokemon[]> {
   try {
-    const result = await db.getAllAsync<Pokemon>(`SELECT * FROM team_pokemon`);
-    console.log("Pokemon in team:", result);
-    return result;
+    const result = await db.getAllAsync<{ pokemon_id: number }>(
+      `SELECT pokemon_id FROM team_pokemon WHERE team_id=${teamId}`
+    );
+
+    const pokemonList = await Promise.all(
+      result.map(async (row) => {
+        const pokemon = await fetchPokemon(row.pokemon_id);
+        return { pokemonId: row.pokemon_id, pokemon };
+      })
+    );
+
+    // console.log("Pokemon in team:", pokemonList);
+    return pokemonList;
   } catch (error) {
-    console.error("Error fetching pokemon in teams:", error);
+    console.error("Error fetching pokemon from team:", error);
     return [];
   }
 }
+
 
 async function fetchPokemon(id: number): Promise<Pokemon> {
   console.log("id:", id);
@@ -53,14 +70,20 @@ export function PokemonGrid() {
   // Fetch pokemon in the selected team when component mounts
   useEffect(() => {
     async function fetchPokemonList() {
-      const data = await listPokemon(db);
+      const data = await listPokemon(db, getCurrentTeamId());
+  
+      // Set pokemonList and pokemonIds from data
       setPokemonList((prevList) =>
-        prevList.map((item, index) => data[index] || null)
+        prevList.map((item, index) => data[index]?.pokemon || null)
+      );
+      setPokemonIds((prevIds) =>
+        prevIds.map((id, index) => (data[index] ? String(data[index].pokemonId) : ''))
       );
     }
     fetchPokemonList();
-    console.log("Pokemon Team screen setup");
+    console.log("Pokemon Team screen setup,", getCurrentTeamId());
   }, [db]);
+  
 
   // Add a pokemon to the specific slot
   const handleAddPokemon = async (index: number) => {
@@ -69,6 +92,8 @@ export function PokemonGrid() {
       return; // If no ID is entered, don't add
     }
     const newPokemon = await fetchPokemon(Number(pokemonId));
+
+    addPokemonToTeam(getCurrentTeamId(),Number(pokemonId));
 
     setPokemonList((prevList) => {
       const updatedList = [...prevList];
@@ -84,13 +109,39 @@ export function PokemonGrid() {
   };
 
   // Delete pokemon from the specific slot
-  const handleDeletePokemon = (index: number) => {
-    setPokemonList((prevList) => {
-      const updatedList = [...prevList];
-      updatedList[index] = null; // Set the slot to empty
-      return updatedList;
-    });
-  };
+const handleDeletePokemon = (index: number) => {
+  const pokemonToDelete = pokemonList[index];
+  if (!pokemonToDelete) {
+    console.log("No pokemon to delete in this slot");
+    return;
+  }
+
+  // Assuming the `pokemonList` holds the correct `pokemonId`
+  const pokemonIdToDelete = pokemonIds[index];
+  if (!pokemonIdToDelete) {
+    console.log("No Pokemon ID found for deletion.");
+    return;
+  }
+
+  console.log("Deleting Pokemon ID:", pokemonIdToDelete);
+
+  // Call the delete function
+  deletePokemon(getCurrentTeamId(), Number(pokemonIdToDelete));
+
+  // Update the list visually
+  setPokemonList((prevList) => {
+    const updatedList = [...prevList];
+    updatedList[index] = null; // Set the slot to empty
+    return updatedList;
+  });
+
+  // Clear the corresponding ID in `pokemonIds`
+  setPokemonIds((prevIds) => {
+    const updatedIds = [...prevIds];
+    updatedIds[index] = ''; // Clear the input field for this slot
+    return updatedIds;
+  });
+};
 
   const RenderItem = React.memo(({ item, index }: { item: Pokemon | null; index: number }) => (
     <View style={styles.itemContainer}>
@@ -166,7 +217,7 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 15,
     width: 150,
-    height: 200,
+    height: 180,
     alignItems: 'center',
     justifyContent: 'center',
   },
