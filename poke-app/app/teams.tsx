@@ -22,9 +22,9 @@ export const setCurrentTeamId = (newId: number) => {
 };
 
 // Function to list teams
-async function listTeams(db: SQLiteDatabase): Promise<Team[]> {
+async function listTeams(db: SQLiteDatabase, userId: number): Promise<Team[]> {
   try {
-    const result = await db.getAllAsync<Team>('SELECT * FROM teams');
+    const result = await db.getAllAsync<Team>('SELECT * FROM teams WHERE user_id = ?', [userId]);
     console.log("Teams:", result);
     return result;
   } catch (error) {
@@ -54,23 +54,25 @@ export function Content() {
   // Fetch teams when the component mounts
   useEffect(() => {
     async function fetchTeams() {
-      const result = await listTeams(db);
+      const result = await listTeams(db,userId);
       setTeams(result);
     }
     fetchTeams();
   }, [db]); // Run once when the component mounts
 
+  const userId = getLoggedInUserId(); // Get logged-in user ID
+
   const handleCreateTeam = async () => {
-    const userId = getLoggedInUserId(); // Get logged-in user ID
+    
     await pokeDb.createTeam(teamName, userId); // Pass the db instance from the context
     setTeamName('');
-    const result = await listTeams(db);
+    const result = await listTeams(db,userId);
     setTeams(result); // Update the team list after creating a team
   };
 
   const handleDeleteTeam = async (id: number) => {
     await pokeDb.deleteTeam(id); // Pass the db instance from the context
-    const result = await listTeams(db); // Re-fetch the team list after deletion
+    const result = await listTeams(db,userId); // Re-fetch the team list after deletion
     setTeams(result);
   };
 

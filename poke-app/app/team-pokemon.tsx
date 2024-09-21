@@ -88,7 +88,7 @@ export function PokemonGrid() {
   // Add a pokemon to the specific slot
   const handleAddPokemon = async (index: number) => {
     const pokemonId = pokemonIds[index]; // Get the ID for the specific slot
-    if (!pokemonId) {
+    if (!pokemonId || isNaN(Number(pokemonId))) {
       return; // If no ID is entered, don't add
     }
     const newPokemon = await fetchPokemon(Number(pokemonId));
@@ -103,7 +103,6 @@ export function PokemonGrid() {
 
     setPokemonIds((prevIds) => {
       const updatedIds = [...prevIds];
-      updatedIds[index] = ''; // Clear the input for this slot after adding
       return updatedIds;
     });
   };

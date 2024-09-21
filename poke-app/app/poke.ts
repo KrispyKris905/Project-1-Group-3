@@ -114,6 +114,7 @@ export async function deleteTeam(id: number) {
     }
     try {
       await db.runAsync(`DELETE FROM teams WHERE id = ?`, [id]);
+      await db.runAsync(`DELETE FROM team_pokemon WHERE team_id = ?`,[id]);
     } catch (error) {
       console.error("Error deleting team:", error);
     }
