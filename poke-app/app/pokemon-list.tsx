@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { Text, Image, View, StyleSheet, FlatList } from 'react-native';
-import {fetchPokemonList} from './pokeDb';
+import {fetchPokemonList} from './(tabs)/pokeDb';
 
 interface Pokemon {
     name: string;
