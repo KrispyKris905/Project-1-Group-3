@@ -13,5 +13,5 @@ test("renders the ListScreen component correctly", async () => {
   await waitFor(() => {
     expect(getByText("bulbasaur")).toBeTruthy();
   });
-
+  
 });

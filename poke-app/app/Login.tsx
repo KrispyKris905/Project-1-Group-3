@@ -33,12 +33,15 @@ async function checkLogin(db: SQLiteDatabase,username: string, password: string,
     }
 
 }
+
 async function getUserId(db:SQLiteDatabase,username: string) {
     const userId = await db.getFirstAsync(`SELECT id FROM users WHERE username = ?`, [username]) as { id: number };
     setLoggedInUserId(userId.id);
     console.log("loggedInUserId: ",loggedInUserId);
 
 }
+
+
 // App component that provides SQLite context
 export default function LoginScreen() {
   return (
@@ -47,6 +50,8 @@ export default function LoginScreen() {
     </View>
   );
 }
+
+
 export function Content() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -66,6 +71,7 @@ export function Content() {
       return;
     }
     checkLogin(db, username,password, navigation);
+
   };
 
     return (
@@ -153,5 +159,6 @@ export function Content() {
     buttons:{
       marginVertical: 10,
       width: '80%',
+
     },
   });

@@ -26,39 +26,24 @@ export default function SignupScreen() {
     pokeDb.createUser(username, password);
     };
   return (
-    <View style={styles.container}>
-      <Image source={require('@/assets/images/Poke-App_Logo.png')}style={styles.headerImage} resizeMode="contain"/>
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={setUsername}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Re-Enter Password"
-        value={re_password}
-        onChangeText={setRE_Password}
-        secureTextEntry
-      />
-      <ThemedView style={styles.buttons}>
-        <Pressable style={styles.pressable} onPress={handleSignUp}>
-          <Text style={styles.pressableText}>Sign Up</Text>
-        </Pressable>
-      <Text>
-        Already have an account?
-      </Text>
-        <Pressable style={styles.pressable} onPress={() => navigation.navigate('Login' as never)}>
-          <Text style={styles.pressableText}>Log in</Text>
-        </Pressable>
-      </ThemedView>
+    <ThemedView style={styles.titleContainer}>
+      <ThemedText type="title">Welcome!</ThemedText>
+      <View style={styles.buttonContainer}>
+        <TextInput
+          style={{ padding: 10, borderWidth: 1 }}
+          placeholder='Username'
+          onChangeText={setUsername}
+        />
+        <TextInput
+          style={{ padding: 10, borderWidth: 1 }}
+          placeholder='Password'
+          onChangeText={setPassword}
+          secureTextEntry={true}
+        />
+        <Button
+          title="Sign up"
+          onPress={handleSignUp}
+        />
       </View>
   );
 }
