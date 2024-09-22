@@ -1,4 +1,5 @@
 import * as SQLite from 'expo-sqlite';
+import { Alert } from 'react-native';
 
 
 let db: SQLite.SQLiteDatabase;
@@ -82,9 +83,10 @@ export async function createUser(username: string, password: string) {
         if (await compareUsernames(username)) {
             await db.execAsync(`INSERT INTO users (username, password) VALUES ('${username}', '${password}')`);
             console.log('User created');
+            Alert.alert('User created. Please go to log in');
             await listUsers();
         } else {
-            alert('Username is taken');
+            Alert.alert('User already exists');
             console.log('User already exists');
         }
     } catch (error) {
@@ -141,4 +143,8 @@ export async function deletePokemon(teamId:number,pokemonId:number) {
   } catch (error) {
     console.error("Error removing pokemon from team",error);
   }
+}
+
+export function validateLogin(username: string, password: string) {
+  throw new Error('Function not implemented.');
 }
