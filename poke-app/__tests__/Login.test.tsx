@@ -31,7 +31,7 @@ describe('LoginScreen', () => {
 
     expect(getByPlaceholderText('Username')).toBeTruthy();
     expect(getByPlaceholderText('Password')).toBeTruthy();
-    expect(getByText('Login')).toBeTruthy();
+    expect(getByText('Log in')).toBeTruthy();
   });
 
   it('updates state when user types into inputs', () => {
@@ -54,7 +54,7 @@ describe('LoginScreen', () => {
     global.alert = jest.fn();
     render(<LoginScreen />);
 
-    const loginButton = screen.getByText('Login');
+    const loginButton = screen.getByText('Log in');
     fireEvent.press(loginButton);
 
     // Wait for the alert to be called
@@ -74,7 +74,7 @@ describe('LoginScreen', () => {
 
     render(<LoginScreen />);
 
-    const loginButton = screen.getByText("Login");
+    const loginButton = screen.getByText("Log in");
     fireEvent.press(loginButton);
 
     await waitFor(() => {
@@ -99,7 +99,7 @@ describe('LoginScreen', () => {
   fireEvent.changeText(getByPlaceholderText('Username'), 'testuser');
   fireEvent.changeText(getByPlaceholderText('Password'), 'password123');
       
-    const loginButton = getByText('Login');
+    const loginButton = getByText('Log in');
     await waitFor(async () => {
       fireEvent.press(loginButton);
       expect(mockNavigation).toHaveBeenCalled();
