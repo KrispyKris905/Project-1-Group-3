@@ -45,6 +45,7 @@ export default function SignupScreen() {
           onPress={handleSignUp}
         />
       </View>
+      </ThemedView>
   );
 }
 
