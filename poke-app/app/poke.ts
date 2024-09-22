@@ -7,9 +7,7 @@ let db: SQLite.SQLiteDatabase;
 // tables if they don't exist
 
 export async function openPokeDatabase(): Promise<SQLite.SQLiteDatabase> {
-    if (!db) {
         db = await SQLite.openDatabaseAsync('poke.db');
-    }
     try {
       await db.execAsync(`
         PRAGMA journal_mode = WAL;
@@ -116,6 +114,7 @@ export async function deleteTeam(id: number) {
     }
     try {
       await db.runAsync(`DELETE FROM teams WHERE id = ?`, [id]);
+      await db.runAsync(`DELETE FROM team_pokemon WHERE team_id = ?`,[id]);
     } catch (error) {
       console.error("Error deleting team:", error);
     }
@@ -123,3 +122,23 @@ export async function deleteTeam(id: number) {
 
 // Pokemon in a Team Functions
 
+export async function addPokemonToTeam(teamId:number, pokemonId:number) {
+  if (!db) {
+    await openPokeDatabase();
+  }
+  try {
+    await db.runAsync(`INSERT INTO team_pokemon (team_id, pokemon_id) VALUES (?, ?)`, [teamId,pokemonId]);
+  } catch (error) {
+    console.error("Error adding pokemon to team",error);
+  }
+}
+export async function deletePokemon(teamId:number,pokemonId:number) {
+  if (!db) {
+    await openPokeDatabase();
+  }
+  try {
+    await db.runAsync(`DELETE FROM team_pokemon WHERE pokemon_id = ? AND team_id = ?`, [pokemonId, teamId]);
+  } catch (error) {
+    console.error("Error removing pokemon from team",error);
+  }
+}

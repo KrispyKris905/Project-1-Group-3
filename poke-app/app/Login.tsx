@@ -1,11 +1,11 @@
 import { View, Button, StyleSheet, TextInput } from 'react-native';
-import { useState} from 'react';
+import { useEffect, useState} from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import * as SQLite from "expo-sqlite";
 import * as pokeDb from './poke';
+import { useSQLiteContext, SQLiteDatabase } from 'expo-sqlite';
 
 let loggedInUserId = 0;
 
@@ -15,8 +15,7 @@ export const setLoggedInUserId = (newId: number) => {
   loggedInUserId = newId;
 };
 
-async function checkLogin(username: string, password: string, navigation: any) {
-  const db = await pokeDb.openPokeDatabase();
+async function checkLogin(db: SQLiteDatabase,username: string, password: string, navigation: any) {
 
     if (await pokeDb.compareUsernames(username) == true) { // user doesnt exist
       alert("Username not found");
@@ -26,8 +25,8 @@ async function checkLogin(username: string, password: string, navigation: any) {
         'SELECT * FROM users WHERE username = ? AND password = ?', [username, password]);
       
         if (result.length > 0) {
-          getUserId(username);
-          navigation.navigate('(tabs)' as never);
+          getUserId(db, username);
+          navigation.navigate('main-menu' as never);
         } else {
           alert("Wrong password");
         }
@@ -35,9 +34,7 @@ async function checkLogin(username: string, password: string, navigation: any) {
 
 }
 
-async function getUserId(username: string) {
-  const db = await pokeDb.openPokeDatabase();
-
+async function getUserId(db:SQLiteDatabase,username: string) {
     const userId = await db.getFirstAsync(`SELECT id FROM users WHERE username = ?`, [username]) as { id: number };
     setLoggedInUserId(userId.id);
     console.log("loggedInUserId: ",loggedInUserId);
@@ -45,20 +42,30 @@ async function getUserId(username: string) {
 }
 
 
-
+// App component that provides SQLite context
 export default function LoginScreen() {
+  return (
+    <View>
+        <Content />
+    </View>
+  );
+}
+
+
+export function Content() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const navigation = useNavigation();
+  const db = useSQLiteContext();
+
+  useEffect
 
   const handleLogin = () => {
-    checkLogin(username, password, navigation);
+    checkLogin(db, username,password, navigation);
 
   };
 
-
-  
     return (
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Welcome!</ThemedText>

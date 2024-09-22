@@ -1,6 +1,6 @@
 import React from "react";
 import { render, waitFor } from '@testing-library/react-native';
-import ListScreen from "../app/(tabs)/pokemon-list";
+import ListScreen from "../app/pokemon-list";
 
 test("renders the ListScreen component correctly", async () => {
   const { getByText } = render(<ListScreen />);
