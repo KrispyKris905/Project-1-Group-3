@@ -1,11 +1,23 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
-import PokemonGrid from '@/app/team-pokemon';
+import { PokemonGrid } from '@/app/team-pokemon';
+import { useSQLiteContext } from 'expo-sqlite'; // Import the hook to mock
 
-jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper'); 
+jest.mock('expo-sqlite'); // Mock the SQLite module
+
+jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper'); // Mock Animated for React Native tests
+
+// Create a mock database object with the required methods
+const mockDb = {
+  getAllAsync: jest.fn(() => Promise.resolve([{ pokemon_id: 1 }, { pokemon_id: 4 }])),
+  getFirstAsync: jest.fn(() => Promise.resolve({ id: 1 })),
+};
 
 describe('PokemonGrid', () => {
   beforeEach(() => {
+    // Mock the useSQLiteContext to return the mockDb
+    (useSQLiteContext as jest.Mock).mockReturnValue(mockDb);
+
     // Mock the initial Pokémon list fetch
     global.fetch = jest.fn((url) => {
       if (url === 'https://pokeapi.co/api/v2/pokemon?limit=6') {
@@ -21,7 +33,7 @@ describe('PokemonGrid', () => {
         } as Response);
       }
 
-      // Mock the individual Pokémon data fetch 
+      // Mock individual Pokémon data fetch
       if (url === 'https://pokeapi.co/api/v2/pokemon/1/') {
         return Promise.resolve({
           ok: true,
@@ -30,7 +42,7 @@ describe('PokemonGrid', () => {
             id: 1,
             name: 'bulbasaur',
             sprites: {
-              front_default: 'https://example.com/bulbasaur.png', // Mock image URL
+              front_default: 'https://example.com/bulbasaur.png',
             },
           }),
         } as Response);
@@ -44,7 +56,7 @@ describe('PokemonGrid', () => {
             id: 4,
             name: 'charmander',
             sprites: {
-              front_default: 'https://example.com/charmander.png', // Mock image URL
+              front_default: 'https://example.com/charmander.png',
             },
           }),
         } as Response);

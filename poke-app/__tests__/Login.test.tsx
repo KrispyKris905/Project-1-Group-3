@@ -2,6 +2,8 @@ import React from 'react';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react-native';
 import LoginScreen from '@/app/Login';
 import * as pokeDb from '@/app/poke';
+import { useSQLiteContext  } from 'expo-sqlite'; 
+
 
 const mockNavigation = jest.fn();
 
@@ -14,9 +16,16 @@ jest.mock('@react-navigation/native', () => ({
 
 jest.mock('@/app/poke'); // Mock the database functions
 
+jest.mock('expo-sqlite', () => ({
+  useSQLiteContext: jest.fn(() => ({
+    getAllAsync: jest.fn(),
+    getFirstAsync: jest.fn(),
+  })),
+}));
+
 
 describe('LoginScreen', () => {
-  
+
   it('renders correctly', () => {
     const { getByPlaceholderText, getByText } = render(<LoginScreen />);
 
@@ -74,23 +83,25 @@ describe('LoginScreen', () => {
   });
 
   it('navigates to the home screen on successful login', async () => {
-    // Mock the database to find the username and correct password
-    (pokeDb.compareUsernames as jest.Mock).mockResolvedValue(false); // Username exists
-    (pokeDb.openPokeDatabase as jest.Mock).mockReturnValue({
-      getAllAsync: jest.fn().mockResolvedValue([{ id: 1 }]), // Correct password
-      getFirstAsync: jest.fn().mockResolvedValue({ username: 'testuser', password: 'password123' }) // Mock getFirstAsync
-    });
-  
-    const { getByPlaceholderText, getByText } = render(<LoginScreen />);
-    
-    fireEvent.changeText(getByPlaceholderText('Username'), 'testuser');
-    fireEvent.changeText(getByPlaceholderText('Password'), 'password123');
-    
-    const loginButton = getByText('Login');
-    fireEvent.press(loginButton);
+    // Mock the database functions to return valid data for login
+  const mockDb = {
+    getAllAsync: jest.fn().mockResolvedValue([{ id: 1 }]), // Correct password
+    getFirstAsync: jest.fn().mockResolvedValue({ id: 1 }), // Mock getFirstAsync for userId
+  };
 
-    await waitFor(() => {
-      // mock and verify that navigation has been called
+  (pokeDb.compareUsernames as jest.Mock).mockResolvedValue(false); // Username exists
+  
+  // Mock the SQLite context to return our mockDb
+  (useSQLiteContext as jest.Mock).mockReturnValue(mockDb);
+  
+  const { getByPlaceholderText, getByText } = render(<LoginScreen />);
+  
+  fireEvent.changeText(getByPlaceholderText('Username'), 'testuser');
+  fireEvent.changeText(getByPlaceholderText('Password'), 'password123');
+      
+    const loginButton = getByText('Login');
+    await waitFor(async () => {
+      fireEvent.press(loginButton);
       expect(mockNavigation).toHaveBeenCalled();
     });
   });
