@@ -13,21 +13,9 @@ Our application is a pokemon team management application with the use of an API.
 
 ### Ashley Jaramilo
 - Include a link to your pull requests
-  - https://github.com/KrispyKris905/Project-1-Group-3/pull/16
-  - https://github.com/KrispyKris905/Project-1-Group-3/pull/20
-  - https://github.com/KrispyKris905/Project-1-Group-3/pull/28
-  - https://github.com/KrispyKris905/Project-1-Group-3/pull/31
-  - https://github.com/KrispyKris905/Project-1-Group-3/pull/32
-  - https://github.com/KrispyKris905/Project-1-Group-3/pull/34
-  - https://github.com/KrispyKris905/Project-1-Group-3/pull/35
-  - https://github.com/KrispyKris905/Project-1-Group-3/pull/37
+  - https://github.com/KrispyKris905/Project-1-Group-3/pull/16 https://github.com/KrispyKris905/Project-1-Group-3/pull/20 https://github.com/KrispyKris905/Project-1-Group-3/pull/28 https://github.com/KrispyKris905/Project-1-Group-3/pull/31 https://github.com/KrispyKris905/Project-1-Group-3/pull/32 https://github.com/KrispyKris905/Project-1-Group-3/pull/34 https://github.com/KrispyKris905/Project-1-Group-3/pull/35 https://github.com/KrispyKris905/Project-1-Group-3/pull/37
 - Include a link to your issues
-  - https://github.com/KrispyKris905/Project-1-Group-3/issues/3
-  - https://github.com/KrispyKris905/Project-1-Group-3/issues/7
-  - https://github.com/KrispyKris905/Project-1-Group-3/issues/8
-  - https://github.com/KrispyKris905/Project-1-Group-3/issues/12
-  - https://github.com/KrispyKris905/Project-1-Group-3/issues/15
-  - https://github.com/KrispyKris905/Project-1-Group-3/issues/36
+  - https://github.com/KrispyKris905/Project-1-Group-3/issues/3 https://github.com/KrispyKris905/Project-1-Group-3/issues/7 https://github.com/KrispyKris905/Project-1-Group-3/issues/8 https://github.com/KrispyKris905/Project-1-Group-3/issues/12 https://github.com/KrispyKris905/Project-1-Group-3/issues/15 https://github.com/KrispyKris905/Project-1-Group-3/issues/36
 - What was your role / which stories did you work on
   - I primarily worked on the teams database and UI for being able to add and delete pokemon from teams.
 - What was the biggest challenge? 
@@ -45,32 +33,30 @@ Our application is a pokemon team management application with the use of an API.
 
 ### Cristobal Elizarraraz
 - Include a link to your pull requests
+    - https://github.com/KrispyKris905/Project-1-Group-3/pull/22 https://github.com/KrispyKris905/Project-1-Group-3/pull/40
 - Include a link to your issues
-- What was your role / which stories did you work on
-
-- What was the biggest challenge? 
-
-- Why was it a challenge? 
-
-- How was the challenge addressed? 
-
-- Favorite / most interesting part of this project
-
-- If you could do it over, what would you change? 
-
-- What is the most valuable thing you learned? 
+  - https://github.com/KrispyKris905/Project-1-Group-3/issues/1 https://github.com/KrispyKris905/Project-1-Group-3/issues/2 https://github.com/KrispyKris905/Project-1-Group-3/issues/23
+- What was your role/which stories did you work on:
+  - I worked primarily on the signup and login pages.
+- What was the biggest challenge?
+  - My biggest challenge was understanding navigation in react native which to this day can’t explain why it worked and didn’t work when it did.
+- Why was it a challenge?
+  - It was a challenge because i was trying to move over user database functions from the login to the poke.ts file and whilst doing so I made a single button on our menu to stop working and it kept giving an routing error
+- How as the challenge addressed?
+  - The challenges i was facing weren’t addressed in the end as I decided it wasn’t necessary what i was changing, and what we had before worked.
+- Favorite/ most interesting part of this project
+  - In general learning how to develop a mobile app using react native.
+- If you could do it over, what would change?
+  - I would change the login file to not have user database functions being created there.
+- What is the most valuable thing you learned
+  - I learned how important communication is between contributors on a project.
 
 
 ### Nathaniel Trujillo
 - Include a link to your pull requests
-  - https://github.com/KrispyKris905/Project-1-Group-3/pull/4
-  - https://github.com/KrispyKris905/Project-1-Group-3/pull/26
-  - https://github.com/KrispyKris905/Project-1-Group-3/pull/27
-  - https://github.com/KrispyKris905/Project-1-Group-3/pull/33
+  - https://github.com/KrispyKris905/Project-1-Group-3/pull/4 https://github.com/KrispyKris905/Project-1-Group-3/pull/26 https://github.com/KrispyKris905/Project-1-Group-3/pull/27 https://github.com/KrispyKris905/Project-1-Group-3/pull/33
 - Include a link to your issues
-  - https://github.com/KrispyKris905/Project-1-Group-3/issues/24
-  - https://github.com/KrispyKris905/Project-1-Group-3/issues/11
-  - https://github.com/KrispyKris905/Project-1-Group-3/issues/38
+  - https://github.com/KrispyKris905/Project-1-Group-3/issues/24 https://github.com/KrispyKris905/Project-1-Group-3/issues/11 https://github.com/KrispyKris905/Project-1-Group-3/issues/38
 - What was your role / which stories did you work on
   - I worked primarily on the db’s, api and the unit tests of the app.
 - What was the biggest challenge?
