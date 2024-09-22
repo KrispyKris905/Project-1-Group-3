@@ -54,9 +54,9 @@ Our application is a pokemon team management application with the use of an API.
 
 ### Nathaniel Trujillo
 - Include a link to your pull requests
-  - https://github.com/KrispyKris905/Project-1-Group-3/pull/4 https://github.com/KrispyKris905/Project-1-Group-3/pull/26 https://github.com/KrispyKris905/Project-1-Group-3/pull/27 https://github.com/KrispyKris905/Project-1-Group-3/pull/33
+  - https://github.com/KrispyKris905/Project-1-Group-3/pull/4 https://github.com/KrispyKris905/Project-1-Group-3/pull/26 https://github.com/KrispyKris905/Project-1-Group-3/pull/27 https://github.com/KrispyKris905/Project-1-Group-3/pull/33 https://github.com/KrispyKris905/Project-1-Group-3/pull/41
 - Include a link to your issues
-  - https://github.com/KrispyKris905/Project-1-Group-3/issues/24 https://github.com/KrispyKris905/Project-1-Group-3/issues/11 https://github.com/KrispyKris905/Project-1-Group-3/issues/38 https://github.com/KrispyKris905/Project-1-Group-3/pull/41
+  - https://github.com/KrispyKris905/Project-1-Group-3/issues/24 https://github.com/KrispyKris905/Project-1-Group-3/issues/11 https://github.com/KrispyKris905/Project-1-Group-3/issues/38
 - What was your role / which stories did you work on
   - I worked primarily on the db’s, api and the unit tests of the app.
 - What was the biggest challenge?
