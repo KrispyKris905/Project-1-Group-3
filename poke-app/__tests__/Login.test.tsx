@@ -65,7 +65,7 @@ describe('LoginScreen', () => {
 
   it('shows alert when password is incorrect', async () => {
     // Mock the database check to find the username but return wrong password
-    (pokeDb.compareUsernames as jest.Mock).mockResolvedValue(true);
+    (pokeDb.compareUsernames as jest.Mock).mockResolvedValue(false);
     (pokeDb.openPokeDatabase as jest.Mock).mockReturnValue({
       getAllAsync: jest.fn().mockResolvedValue([]), //  wrong password
     });
