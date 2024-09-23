@@ -22,7 +22,7 @@ const MockNavigation = () => (
     </Stack.Navigator>
   </NavigationContainer>
 );
-
+//detects ui elements of homescreen.
 describe('HomeScreen', () => {
   it('renders correctly', () => {
     render(<MockNavigation />);
