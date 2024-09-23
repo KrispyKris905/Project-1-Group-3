@@ -1,11 +1,19 @@
 import React from 'react';
 import { render, fireEvent, waitFor, screen } from '@testing-library/react-native';
+import { Alert } from 'react-native';
 import LoginScreen from '@/app/Login';
 import * as pokeDb from '@/app/poke';
 import { useSQLiteContext  } from 'expo-sqlite'; 
 
 
 const mockNavigation = jest.fn();
+
+jest.mock('expo-sqlite', () => ({
+  useSQLiteContext: jest.fn(() => ({
+    getAllAsync: jest.fn(),
+    getFirstAsync: jest.fn(),
+  })),
+}));
 
 jest.mock('@react-navigation/native', () => ({
   ...jest.requireActual('@react-navigation/native'),
@@ -25,6 +33,10 @@ jest.mock('expo-sqlite', () => ({
 
 
 describe('LoginScreen', () => {
+
+  beforeEach(() => {
+    jest.clearAllMocks(); // Clear any mock calls before each test
+  });
 
   it('renders correctly', () => {
     const { getByPlaceholderText, getByText } = render(<LoginScreen />);
@@ -47,30 +59,29 @@ describe('LoginScreen', () => {
   });
 
   it('shows alert when username does not exist', async () => {
-    // Mock the database check to return false for username
     (pokeDb.compareUsernames as jest.Mock).mockResolvedValue(true);
 
-    // Spy on the Alert function
-    global.alert = jest.fn();
-    render(<LoginScreen />);
+    // Spy on Alert.alert
+    jest.spyOn(Alert, 'alert');
 
+    render(<LoginScreen />);
     const loginButton = screen.getByText('Log in');
     fireEvent.press(loginButton);
 
     // Wait for the alert to be called
     await waitFor(() => {
-      expect(global.alert).toHaveBeenCalled();
+      expect(Alert.alert).toHaveBeenCalled();
     });
   });
 
   it('shows alert when password is incorrect', async () => {
     // Mock the database check to find the username but return wrong password
-    (pokeDb.compareUsernames as jest.Mock).mockResolvedValue(false);
+    (pokeDb.compareUsernames as jest.Mock).mockResolvedValue(false); //username is true!
     (pokeDb.openPokeDatabase as jest.Mock).mockReturnValue({
-      getAllAsync: jest.fn().mockResolvedValue([]), //  wrong password
+      getAllAsync: jest.fn().mockResolvedValue([]), //  wrong password no return.
     });
 
-    global.alert = jest.fn();
+    jest.spyOn(Alert, 'alert');
 
     render(<LoginScreen />);
 
@@ -78,7 +89,7 @@ describe('LoginScreen', () => {
     fireEvent.press(loginButton);
 
     await waitFor(() => {
-      expect(global.alert).toHaveBeenCalled();
+      expect(Alert.alert).toHaveBeenCalled();
     });
   });
 
